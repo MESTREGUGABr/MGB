@@ -23,8 +23,11 @@ Foi utilizado como inspiração para a construção do app, o Letterboxd.
 <img width="306" height="660" alt="image" src="https://github.com/user-attachments/assets/0b117c60-58fc-46ee-90c4-546bac90af61" />
 
 # Links do projeto
-[Protótipo interativo](https://www.figma.com/design/sJ67i2ROQWYl8goO5Kr4rI/-MGB--My-Game-Backlog?node-id=0-1&t=H2xyQFrSXui2n0WP-1).
-[Telas no Figma](https://www.figma.com/design/sJ67i2ROQWYl8goO5Kr4rI/-MGB--My-Game-Backlog?node-id=0-1&t=H2xyQFrSXui2n0WP-1).
+[Protótipo interativo](https://www.figma.com/design/sJ67i2ROQWYl8goO5Kr4rI/-MGB--My-Game-Backlog?node-id=0-1&t=H2xyQFrSXui2n0WP-1)
+
+[Telas no Figma](https://www.figma.com/design/sJ67i2ROQWYl8goO5Kr4rI/-MGB--My-Game-Backlog?node-id=0-1&t=H2xyQFrSXui2n0WP-1)
+
+[Planilha de experiência](https://docs.google.com/spreadsheets/d/1v3umWa8yu2SOK51Jbf5CVEYaB8qHqCJDRGZftgwhfbk/edit?usp=sharing)
 
 # MGB App Backlog
 
