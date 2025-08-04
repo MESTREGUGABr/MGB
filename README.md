@@ -17,7 +17,7 @@ Através do MGB, espera-se que o usuário seja capaz de:
 Assim, o MGB funciona como uma rede social focada em backlog de games, tornando o hábito de jogar mais organizado, motivador e social.
 
 # Inspiração
-Foi utilizado como inspiração para a construção do app, o Letterboxd. 
+Foi utilizado como inspiração para a construção do app, o Letterboxd.
 
 <img width="312" height="616" alt="image" src="https://github.com/user-attachments/assets/5c709b15-5aaa-43d7-8e5c-2a899a74bd44" />
 <img width="306" height="660" alt="image" src="https://github.com/user-attachments/assets/0b117c60-58fc-46ee-90c4-546bac90af61" />
