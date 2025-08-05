@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'user/user_model.dart'; // Importe o seu modelo de usuário
+import 'user/user_model.dart';
 
 class CadastroScreen extends StatefulWidget {
   const CadastroScreen({Key? key}) : super(key: key);
@@ -24,13 +24,11 @@ class _CadastroScreenState extends State<CadastroScreen> {
 
   Future<void> _cadastrar() async {
     try {
-      // 1. Criar o usuário no Firebase Auth
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: _emailController.text,
         password: _senhaController.text,
       );
 
-      // 2. Criar o objeto UserModel com os dados da tela
       DateTime dataNascimento = DateTime(
         int.parse(_anoController.text),
         int.parse(_mesController.text),
@@ -45,13 +43,11 @@ class _CadastroScreenState extends State<CadastroScreen> {
         dataNascimento: dataNascimento,
       );
 
-      // 3. Salvar os dados adicionais no Firestore
       await _firestore
           .collection('users')
           .doc(userCredential.user!.uid)
           .set(newUser.toMap());
 
-      // Navegar para a tela principal ou de login
       Navigator.of(context).pop();
 
     } on FirebaseAuthException catch (e) {
@@ -86,8 +82,6 @@ class _CadastroScreenState extends State<CadastroScreen> {
                 height: 200,
               ),
               const SizedBox(height: 30),
-              // Avatar (placeholder)
-              // Campos de Nome de usuário e Nome Real
               Row(
                 children: [
                   Expanded(

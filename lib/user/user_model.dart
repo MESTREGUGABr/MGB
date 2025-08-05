@@ -17,6 +17,7 @@ class UserModel {
     this.sexo,
   });
 
+  // Método para converter o objeto UserModel em um Map para o Firestore
   Map<String, dynamic> toMap() {
     return {
       'nome': nome,
@@ -28,6 +29,7 @@ class UserModel {
     };
   }
 
+  // Método para criar um objeto UserModel a partir de um Map do Firestore
   factory UserModel.fromMap(String id, Map<String, dynamic> map) {
     return UserModel(
       id: id,

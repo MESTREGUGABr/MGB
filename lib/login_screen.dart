@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'register_screen.dart';
 import 'recuperar_senha_screen.dart';
-import 'home_screen.dart';
+import 'main_layout_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -25,13 +25,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (mounted) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const HomeScreen()),
+          MaterialPageRoute(builder: (context) => const MainLayoutScreen()),
         );
       }
     } on FirebaseAuthException catch (e) {
       //...
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
