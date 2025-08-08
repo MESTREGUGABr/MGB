@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'user/user_model.dart';
 import 'login_screen.dart';
+import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -129,6 +130,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ? const Icon(Icons.person, size: 40)
                 : null,
           ),
+
           const SizedBox(width: 20),
           // Coluna com Nome, Stats e Config
           Expanded(
@@ -147,7 +149,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     IconButton(
                       icon: const Icon(Icons.settings, color: Colors.white),
                       onPressed: () {
-                        // Navegação para a tela de configurações (a ser implementada)
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => EditProfileScreen(userModel: _userModel!),
+                          ),
+                        ).then((_) {
+                          setState(() {
+                            _loadUserData();
+                          });
+                        });
                       },
                     ),
                   ],
