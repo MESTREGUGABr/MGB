@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'login_screen.dart';
 
+// open the search screen
+import 'features/games/ui/search_games_screen.dart';
+
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
@@ -9,7 +12,7 @@ class HomeScreen extends StatelessWidget {
     await FirebaseAuth.instance.signOut();
     Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(builder: (context) => const LoginScreen()),
-          (Route<dynamic> route) => false,
+      (Route<dynamic> route) => false,
     );
   }
 
@@ -20,7 +23,10 @@ class HomeScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.grey[900],
       appBar: AppBar(
-        title: const Text('MGB - Principal', style: TextStyle(color: Colors.white)),
+        title: const Text(
+          'MGB - Principal',
+          style: TextStyle(color: Colors.white),
+        ),
         backgroundColor: Colors.grey[850],
         actions: [
           IconButton(
@@ -30,6 +36,19 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+
+      // FAB to open search
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => const SearchGamesScreen(),
+            ),
+          );
+        },
+        child: const Icon(Icons.search),
+      ),
+
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
