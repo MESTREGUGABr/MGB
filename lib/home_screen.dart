@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'login_screen.dart';
+import 'package:mgb/authentication/view/login_screen.dart';
 
-// open the search screen
-import 'features/games/ui/search_games_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

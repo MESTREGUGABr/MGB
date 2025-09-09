@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'user/user_model.dart';
-import 'login_screen.dart';
-import 'edit_profile_screen.dart';
+import 'package:mgb/user/domain/user_model.dart';
+import 'package:mgb/authentication/view/login_screen.dart';
+import 'package:mgb/profile/view/edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String? userId;

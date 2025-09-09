@@ -3,14 +3,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../config/app_config.dart';
-import 'package:mgb/user/user_model.dart';
-import 'package:mgb/user/user_repository.dart';
-import 'package:mgb/profile_screen.dart';
+import '../../../../../config/app_config.dart';
+import 'package:mgb/user/domain/user_model.dart';
+import 'package:mgb/user/data/user_repository.dart';
+import 'package:mgb/profile/view/profile_screen.dart';
 import 'package:mgb/features/games/data/games_repository.dart';
 import 'package:mgb/features/games/data/rawg_api.dart';
 import 'package:mgb/features/games/domain/game_model.dart';
-import 'package:mgb/search_viewmodel.dart';
+import 'package:mgb/profile/viewmodel/search_viewmodel.dart';
 import 'package:mgb/features/games/ui/game_details_screen.dart';
 
 class SearchScreen extends StatelessWidget {

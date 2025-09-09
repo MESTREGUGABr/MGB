@@ -1,9 +1,9 @@
 // lib/main_layout_screen.dart
 
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
-import 'profile_screen.dart';
-import 'package:mgb/search_screen.dart';
+import '../../home_screen.dart';
+import '../../profile/view/profile_screen.dart';
+import 'package:mgb/profile/view/search_screen.dart';
 import 'package:mgb/features/games/ui/search_games_screen.dart';
 
 class MainLayoutScreen extends StatefulWidget {
