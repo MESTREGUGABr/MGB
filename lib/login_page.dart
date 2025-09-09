@@ -8,7 +8,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Controladores para ler o texto dos campos
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
 
@@ -16,7 +15,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(585858),
-      // Evita que o teclado aperte os elementos da tela
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
@@ -24,17 +22,14 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Espaçamento no topo para centralizar melhor
               const SizedBox(height: 80),
 
-              // Ícone ou Logo
               Image.asset(
                 'assets/images/logo.png',
-                height: 150, // Ajuste a altura conforme necessário
+                height: 150,
               ),
               const SizedBox(height: 150),
 
-              // Título
               const Text(
                 'Seja Bem-Vindo(a)!',
                 textAlign: TextAlign.center,
@@ -52,7 +47,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 40),
 
-              // Campo de E-mail
               TextField(
                 controller: _emailController,
                 keyboardType: TextInputType.emailAddress,
@@ -64,7 +58,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 16),
 
-              // Campo de Senha
               TextField(
                 controller: _passwordController,
                 obscureText: true, // Esconde a senha
@@ -76,7 +69,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
               const SizedBox(height: 8),
 
-              // Botão "Esqueci a senha"
               Align(
                 alignment: Alignment.centerRight,
                 child: TextButton(

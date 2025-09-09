@@ -3,8 +3,8 @@ import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'dart:convert';
 
-import 'package:seu_pacote/features/games/data/rawg_api.dart';
-import 'package:seu_pacote/features/games/domain/game_model.dart';
+import 'package:mgb/features/games/data/rawg_api.dart';
+import 'package:mgb/features/games/domain/game_model.dart';
 
 void main() {
   group('RawgApi', () {

@@ -147,7 +147,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
 
                 if (user == null || newEmail.isEmpty || password.isEmpty) return;
 
-                // Mostra um indicador de carregamento
                 showDialog(context: context, builder: (context) => const Center(child: CircularProgressIndicator(color: Colors.red)), barrierDismissible: false);
 
                 try {
@@ -164,20 +163,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                     'email': newEmail,
                   });
 
-                  // Atualiza o estado local para a UI refletir a mudança
                   setState(() {
                     _currentUserModel.email = newEmail;
                   });
 
-                  Navigator.of(context).pop(); // Fecha o indicador de loading
-                  Navigator.of(context).pop(); // Fecha o AlertDialog
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
 
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('E-mail de verificação enviado para o novo endereço!'), backgroundColor: Colors.green),
                   );
 
                 } on FirebaseAuthException catch (e) {
-                  Navigator.of(context).pop(); // Fecha o indicador de loading
+                  Navigator.of(context).pop();
                   String errorMsg = "Ocorreu um erro.";
                   if (e.code == 'wrong-password') {
                     errorMsg = "A senha atual está incorreta.";

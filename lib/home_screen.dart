@@ -37,7 +37,7 @@ class HomeScreen extends StatelessWidget {
         ],
       ),
 
-      // FAB to open search
+      /*// FAB to open search
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
@@ -47,7 +47,7 @@ class HomeScreen extends StatelessWidget {
           );
         },
         child: const Icon(Icons.search),
-      ),
+      ),*/
 
       body: Center(
         child: Column(

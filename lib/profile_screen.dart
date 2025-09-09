@@ -6,7 +6,9 @@ import 'login_screen.dart';
 import 'edit_profile_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final String? userId;
+
+  const ProfileScreen({super.key, this.userId});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
@@ -15,6 +17,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   UserModel? _userModel;
   bool _isLoading = true;
+  bool _isCurrentUserProfile = false;
 
   @override
   void initState() {
@@ -23,21 +26,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _loadUserData() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user == null) {
-      _logout();
-      return;
-    }
+    setState(() { _isLoading = true; });
+
     try {
-      final doc = await FirebaseFirestore.instance.collection('users').doc(user.uid).get();
-      if (doc.exists) {
+      String? userIdToLoad;
+      final currentUser = FirebaseAuth.instance.currentUser;
+
+      if (widget.userId != null) {
+        userIdToLoad = widget.userId;
+        _isCurrentUserProfile = (currentUser?.uid == userIdToLoad);
+      } else if (currentUser != null) {
+        userIdToLoad = currentUser.uid;
+        _isCurrentUserProfile = true;
+      } else {
+        _logout();
+        return;
+      }
+
+      final doc = await FirebaseFirestore.instance.collection('users').doc(userIdToLoad).get();
+      if (doc.exists && mounted) {
         setState(() {
           _userModel = UserModel.fromMap(doc.id, doc.data()!);
           _isLoading = false;
         });
+      } else if(mounted) {
+        setState(() { _isLoading = false; });
       }
     } catch (e) {
-      // Tratar erro
+      if(mounted) { setState(() { _isLoading = false; }); }
     }
   }
 
@@ -60,24 +76,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         body: _isLoading
             ? const Center(child: CircularProgressIndicator(color: Colors.red))
             : _userModel == null
-            ? const Center(child: Text('Não foi possível carregar o perfil.', style: TextStyle(color: Colors.white)))
+            ? const Center(child: Text('Usuário não encontrado.', style: TextStyle(color: Colors.white)))
             : _buildProfileView(),
       ),
     );
   }
 
-  // Novo método para construir a visualização complexa do perfil
   Widget _buildProfileView() {
-    // NestedScrollView é ideal para um cabeçalho fixo com conteúdo rolável abaixo
     return NestedScrollView(
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return [
           SliverToBoxAdapter(
-            child: Column(
-              children: [
-                _buildProfileHeader(),
-              ],
-            ),
+            child: _buildProfileHeader(),
           ),
           SliverPersistentHeader(
             delegate: _SliverAppBarDelegate(
@@ -93,34 +103,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 unselectedLabelColor: Colors.grey,
               ),
             ),
-            pinned: true, // Faz a TabBar "grudar" no topo ao rolar a tela
+            pinned: true,
           ),
         ];
       },
       body: TabBarView(
         children: [
-          // Conteúdo da Aba "Perfil"
-          // Aqui entrarão as listas de jogos (Favoritos, Recentes, etc.) no futuro
-          Center(child: Text('Conteúdo do Perfil', style: TextStyle(color: Colors.white))),
-
-          // Conteúdo da Aba "Backlog"
-          Center(child: Text('Conteúdo do Backlog', style: TextStyle(color: Colors.white))),
-
-          // Conteúdo da Aba "Wishlist"
-          Center(child: Text('Conteúdo da Wishlist', style: TextStyle(color: Colors.white))),
+          Center(child: Text('Conteúdo do Perfil de ${_userModel!.nickname}', style: TextStyle(color: Colors.white))),
+          Center(child: Text('Conteúdo do Backlog de ${_userModel!.nickname}', style: TextStyle(color: Colors.white))),
+          Center(child: Text('Conteúdo da Wishlist de ${_userModel!.nickname}', style: TextStyle(color: Colors.white))),
         ],
       ),
     );
   }
 
-  // Widget para o cabeçalho (Foto, Nome, Stats, Config)
   Widget _buildProfileHeader() {
     return Padding(
       padding: const EdgeInsets.only(top: 60, left: 20, right: 20, bottom: 20),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          // Avatar do Usuário
           CircleAvatar(
             radius: 40,
             backgroundImage: _userModel!.avatarUrl != null
@@ -130,40 +132,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ? const Icon(Icons.person, size: 40)
                 : null,
           ),
-
           const SizedBox(width: 20),
-          // Coluna com Nome, Stats e Config
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Nickname do usuário
-                    Text(
-                      _userModel!.nickname,
-                      style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                    Expanded(
+                      child: Text(
+                        _userModel!.nickname,
+                        style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    // Botão de Configurações
-                    IconButton(
-                      icon: const Icon(Icons.settings, color: Colors.white),
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => EditProfileScreen(userModel: _userModel!),
-                          ),
-                        ).then((_) {
-                          setState(() {
-                            _loadUserData();
-                          });
-                        });
-                      },
-                    ),
+                    if (_isCurrentUserProfile) // Botão só aparece no perfil do próprio usuário
+                      IconButton(
+                        icon: const Icon(Icons.settings, color: Colors.white),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => EditProfileScreen(userModel: _userModel!),
+                            ),
+                          ).then((_) => _loadUserData());
+                        },
+                      ),
                   ],
                 ),
                 const SizedBox(height: 10),
-                // Linha com os Stats
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -180,46 +178,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  // Helper para criar as colunas de estatísticas
   Widget _buildStatColumn(String label, String value) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Text(
-          label,
-          style: const TextStyle(color: Colors.grey, fontSize: 14),
-        ),
+        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 14)),
         const SizedBox(height: 4),
-        Text(
-          value,
-          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
-        ),
+        Text(value, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
       ],
     );
   }
 }
 
-// Classe auxiliar para fazer a TabBar "grudar" no topo (pinned)
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate(this._tabBar);
-
   final TabBar _tabBar;
-
   @override
   double get minExtent => _tabBar.preferredSize.height;
   @override
   double get maxExtent => _tabBar.preferredSize.height;
-
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return Container(
-      color: Colors.grey[900], // Cor de fundo da TabBar
-      child: _tabBar,
-    );
+    return Container(color: Colors.grey[900], child: _tabBar);
   }
-
   @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
-  }
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) => false;
 }
