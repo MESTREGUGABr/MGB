@@ -211,10 +211,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: [
-            // --- Seção da Foto de Perfil ---
             GestureDetector(
               onTap: () {
-                // TODO: Implementar lógica para alterar foto
               },
               child: Column(
                 children: [
@@ -237,7 +235,6 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
             ),
             const SizedBox(height: 40),
 
-            // --- Seção de Informações ---
             _buildInfoRow(
               label: 'Nome de usuário:',
               value: _currentUserModel.nickname,

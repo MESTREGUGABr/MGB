@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "535893442346",
-    "project_id": "mgb-db",
-    "storage_bucket": "mgb-db.firebasestorage.app"
+    "project_number": "516237230275",
+    "project_id": "mgb-f1b4d",
+    "storage_bucket": "mgb-f1b4d.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:535893442346:android:b9a550dd1d96b12b9ea853",
+        "mobilesdk_app_id": "1:516237230275:android:c49bccba9264e0bee7a276",
         "android_client_info": {
           "package_name": "com.mygamingbacklog.mgb"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAPoaIsuJgfUiOutZ864zbTFGwJt9v_60s"
+          "current_key": "AIzaSyAI4B2TxQNalzGMPJ9sCsh8UyaTuI3DwZQ"
         }
       ],
       "services": {

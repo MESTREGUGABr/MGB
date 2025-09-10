@@ -5,8 +5,8 @@ class LibraryEntry {
   final int gameId;
   final String name;
   final String? backgroundImage;
-  final String status; 
-  final int rating; 
+  final String status;
+  final int rating;
   final DateTime addedAt;
   final DateTime updatedAt;
 
@@ -20,23 +20,6 @@ class LibraryEntry {
     required this.addedAt,
     required this.updatedAt,
   });
-
-  LibraryEntry copyWith({
-    String? status,
-    int? rating,
-    DateTime? updatedAt,
-  }) {
-    return LibraryEntry(
-      userId: userId,
-      gameId: gameId,
-      name: name,
-      backgroundImage: backgroundImage,
-      status: status ?? this.status,
-      rating: rating ?? this.rating,
-      addedAt: addedAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return {

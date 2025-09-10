@@ -14,26 +14,26 @@ class LibraryScreen extends StatefulWidget {
 }
 
 class _LibraryScreenState extends State<LibraryScreen> with SingleTickerProviderStateMixin {
-  late final TabController _tabController;
+  late final TabController _tab;
   late final LibraryRepository _repo;
 
-  static const statuses = ['wishlist', 'backlog', 'playing', 'finished', 'dropped'];
-  static const labels = ['Wishlist', 'Backlog', 'Playing', 'Finished', 'Dropped'];
+  static const _statuses = ['wishlist', 'backlog', 'playing', 'finished', 'dropped'];
+  static const _labels = ['Wishlist', 'Backlog', 'Playing', 'Finished', 'Dropped'];
 
   @override
   void initState() {
     super.initState();
     _repo = LibraryRepository(db: FirebaseFirestore.instance, auth: FirebaseAuth.instance);
-    _tabController = TabController(length: statuses.length, vsync: this);
+    _tab = TabController(length: _statuses.length, vsync: this);
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tab.dispose();
     super.dispose();
   }
 
-  Widget _buildEntryTile(LibraryEntry e) {
+  Widget _tile(LibraryEntry e) {
     return ListTile(
       leading: e.backgroundImage != null
           ? ClipRRect(
@@ -43,21 +43,11 @@ class _LibraryScreenState extends State<LibraryScreen> with SingleTickerProvider
           : const Icon(Icons.videogame_asset, color: Colors.white70),
       title: Text(e.name, style: const TextStyle(color: Colors.white)),
       subtitle: Row(
-        children: List.generate(5, (i) {
-          final filled = i < e.rating;
-          return Icon(filled ? Icons.star : Icons.star_border, size: 18, color: Colors.amber);
-        }),
+        children: List.generate(5, (i) => Icon(i < e.rating ? Icons.star : Icons.star_border, size: 18, color: Colors.amber)),
       ),
       onTap: () {
-        final initial = GameModel(
-          id: e.gameId,
-          name: e.name,
-          backgroundImage: e.backgroundImage,
-          platforms: const [],
-        );
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (_) => GameDetailsScreen(gameId: e.gameId, initial: initial),
-        ));
+        final initial = GameModel(id: e.gameId, name: e.name, backgroundImage: e.backgroundImage, platforms: const []);
+        Navigator.of(context).push(MaterialPageRoute(builder: (_) => GameDetailsScreen(gameId: e.gameId, initial: initial)));
       },
     );
   }
@@ -70,33 +60,39 @@ class _LibraryScreenState extends State<LibraryScreen> with SingleTickerProvider
         backgroundColor: Colors.black,
         title: const Text('My Library', style: TextStyle(color: Colors.white)),
         bottom: TabBar(
-          controller: _tabController,
+          controller: _tab,
           isScrollable: true,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
-          tabs: [for (final l in labels) Tab(text: l)],
+          tabs: [for (final l in _labels) Tab(text: l)],
         ),
       ),
       body: TabBarView(
-        controller: _tabController,
+        controller: _tab,
         children: [
-          for (final status in statuses)
+          for (final s in _statuses)
             StreamBuilder<List<LibraryEntry>>(
-              stream: _repo.streamByStatus(status),
+              stream: _repo.streamByStatus(s),
               builder: (context, snap) {
                 if (snap.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
+                if (snap.hasError) {
+                  return Center(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Text('Erro Firestore: ${snap.error}', style: const TextStyle(color: Colors.redAccent)),
+                    ),
+                  );
+                }
                 final data = snap.data ?? const [];
                 if (data.isEmpty) {
-                  return const Center(
-                    child: Text('Lista vazia', style: TextStyle(color: Colors.white70)),
-                  );
+                  return const Center(child: Text('Lista vazia', style: TextStyle(color: Colors.white70)));
                 }
                 return ListView.separated(
                   itemCount: data.length,
-                  separatorBuilder: (_, __) => const Divider(color: Colors.white10),
-                  itemBuilder: (_, i) => _buildEntryTile(data[i]),
+                  separatorBuilder: (_, __) => const Divider(color: Colors.white12),
+                  itemBuilder: (_, i) => _tile(data[i]),
                 );
               },
             ),

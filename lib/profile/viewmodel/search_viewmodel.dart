@@ -1,8 +1,6 @@
-// lib/features/games/viewmodel/search_viewmodel.dart
-
 import 'package:flutter/material.dart';
 import 'package:mgb/user/data/user_repository.dart';
-import 'package:mgb/features/games/data/games_repository.dart'; // Você já tem este
+import 'package:mgb/features/games/data/games_repository.dart';
 
 class SearchViewModel extends ChangeNotifier {
   final GamesRepository _gamesRepo;

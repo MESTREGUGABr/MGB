@@ -13,9 +13,7 @@ class LibraryRepository {
 
   String get _uid {
     final u = _auth.currentUser;
-    if (u == null) {
-      throw StateError('Usuário não autenticado.');
-    }
+    if (u == null) throw StateError('Usuário não autenticado.');
     return u.uid;
   }
 
@@ -62,6 +60,6 @@ class LibraryRepository {
         .where('status', isEqualTo: status)
         .orderBy('updatedAt', descending: true)
         .snapshots()
-        .map((snap) => snap.docs.map((d) => LibraryEntry.fromMap(d.data())).toList());
+        .map((q) => q.docs.map((d) => LibraryEntry.fromMap(d.data())).toList());
   }
 }

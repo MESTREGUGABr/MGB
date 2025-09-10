@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import '../../../config/app_config.dart';
 import '../data/games_repository.dart';
 import '../data/rawg_api.dart';
@@ -26,37 +25,25 @@ class _SearchGamesScreenState extends State<SearchGamesScreen> {
     _repo = GamesRepository(RawgApi(AppConfig.rawgApiKey));
   }
 
-  Future<void> _doSearch() async {
+  Future<void> _search() async {
     final q = _controller.text.trim();
     if (q.isEmpty) return;
-
     if (!AppConfig.hasRawgKey) {
-      setState(() {
-        _error = 'RAWG_API_KEY ausente. Rode com --dart-define ou --dart-define-from-file.';
-        _results = [];
-      });
+      setState(() => _error = 'RAWG_API_KEY ausente');
       return;
     }
-
     setState(() {
       _loading = true;
       _error = null;
+      _results = [];
     });
     try {
-      final res = await _repo.search(q);
-      setState(() {
-        _results = res;
-      });
+      final r = await _repo.search(q);
+      setState(() => _results = r);
     } catch (e) {
-      setState(() {
-        _error = e.toString();
-      });
+      setState(() => _error = 'Falha na busca: $e');
     } finally {
-      if (mounted) {
-        setState(() {
-          _loading = false;
-        });
-      }
+      if (mounted) setState(() => _loading = false);
     }
   }
 
@@ -65,27 +52,26 @@ class _SearchGamesScreenState extends State<SearchGamesScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        systemOverlayStyle: SystemUiOverlayStyle.light,
         backgroundColor: Colors.black,
         title: const Text('Buscar jogos', style: TextStyle(color: Colors.white)),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             TextField(
               controller: _controller,
               style: const TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                hintText: 'Digite o nome do jogo...',
+                hintText: 'Digite o nome...',
                 hintStyle: const TextStyle(color: Colors.white54),
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.search, color: Colors.white),
-                  onPressed: _doSearch,
+                  onPressed: _search,
                 ),
               ),
-              onSubmitted: (_) => _doSearch(),
+              onSubmitted: (_) => _search(),
             ),
             const SizedBox(height: 12),
             if (_loading) const LinearProgressIndicator(),
@@ -96,44 +82,33 @@ class _SearchGamesScreenState extends State<SearchGamesScreen> {
               ),
             Expanded(
               child: _results.isEmpty
-                  ? const Center(
-                      child: Text('Sem resultados', style: TextStyle(color: Colors.white70)),
-                    )
+                  ? const Center(child: Text('Sem resultados', style: TextStyle(color: Colors.white70)))
                   : ListView.separated(
                       itemCount: _results.length,
-                      separatorBuilder: (_, __) => const Divider(color: Colors.white10),
-                      itemBuilder: (context, i) {
+                      separatorBuilder: (_, __) => const Divider(color: Colors.white12),
+                      itemBuilder: (_, i) {
                         final g = _results[i];
                         return ListTile(
                           leading: g.backgroundImage != null
                               ? ClipRRect(
                                   borderRadius: BorderRadius.circular(6),
-                                  child: Image.network(
-                                    g.backgroundImage!,
-                                    width: 56,
-                                    height: 56,
-                                    fit: BoxFit.cover,
-                                  ),
+                                  child: Image.network(g.backgroundImage!, width: 56, height: 56, fit: BoxFit.cover),
                                 )
                               : const Icon(Icons.videogame_asset, color: Colors.white70),
                           title: Text(g.name, style: const TextStyle(color: Colors.white)),
                           subtitle: Text(
                             [
-                              if (g.released != null) 'Lançamento: ${g.released!.toLocal().toString().split(' ').first}',
+                              if (g.released != null)
+                                'Lançamento: ${g.released!.toLocal().toString().split(' ').first}',
                               if (g.rating != null) 'Nota: ${g.rating}',
                               if (g.platforms.isNotEmpty) 'Plataformas: ${g.platforms.take(3).join(', ')}',
                             ].join(' • '),
                             style: const TextStyle(color: Colors.white70),
                           ),
                           onTap: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => GameDetailsScreen(
-                                  gameId: g.id,
-                                  initial: g,
-                                ),
-                              ),
-                            );
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (_) => GameDetailsScreen(gameId: g.id, initial: g),
+                            ));
                           },
                         );
                       },
